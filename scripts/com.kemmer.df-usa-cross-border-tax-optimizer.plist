@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.kemmer.df-usa-cross-border-tax-optimizer</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/make/Projects/dark-factories/df-usa-cross-border-tax-optimizer/scripts/run-df-usa-cross-border-tax-mac.sh</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>7200</integer>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/df-usa-cross-border-tax-optimizer.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/df-usa-cross-border-tax-optimizer.stderr.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>DF_USA_TAX_OPTIMIZER_REAL_ENABLED</key>
+        <string>false</string>
+    </dict>
+</dict>
+</plist>
