@@ -1,4 +1,3 @@
-# DF-USA-Cross-Border-Tax-Optimizer Configuration [CRUX-MK]
 df_id: DF-USA-CROSS-BORDER-TAX-OPTIMIZER
 df_name: usa-cross-border-tax-optimizer
 welle_introduced: welle-51
@@ -6,76 +5,73 @@ version: 0.1.0-SKELETON
 status: PRE-PRODUCTION-CONDITIONAL
 type: foundation-df
 crux-mk: true
-
 k0_touch: true
 q0_touch: true
 phronesis_required: true
 sandbox_default: true
-country_code: "US"
-jurisdiction: "DE+US-Tax-Treaty"
+country_code: US
+jurisdiction: DE+US-Tax-Treaty
+description: 'DE-USA Tax-Treaty (DBA) + Sec-883-Carve-Out Mock-Calculator.
 
-description: |
-  DE-USA Tax-Treaty (DBA) + Sec-883-Carve-Out Mock-Calculator.
   Quellensteuer + Wegzugssteuer + E-2-Visa-Tax-Implications.
+
   K_0-Pflicht-Phronesis: Anwalt-API-Stub (LexVance-Integration spaeter).
 
+  '
 acceptance_criteria:
   K11_cascade_containment:
-    cascade_isolation: "hard"
+    cascade_isolation: hard
     failure_blast_radius: 0
-    dependency_dlq_strategy: "isolated_dlq_per_calculation"
+    dependency_dlq_strategy: isolated_dlq_per_calculation
   K12_distillation_resistenz:
     output_feeds_into_training: false
     provenance_required_in_output: true
-    non_llm_validation_layer: true   # Anwalt-API-Stub PFLICHT
-    # W50-A Batch-2 K12 upgrade: FullProvenanceEnvelope (HMAC + chain_predecessor)
+    non_llm_validation_layer: true
     envelope_schema: full_provenance_envelope_v1
     hmac_secret_env_var: DF_USA_TAX_HMAC_SECRET
     envelope_ttl_seconds: 86400
     chain_linkage: true
   K13_independent_ground_truth:
-    # W50-A Batch-2 K13 upgrade: government_records (quarterly) → rfc3161 (per-estimate)
-    external_anchor_type: "rfc3161"
-    external_anchor_provider: "freetsa"
-    external_anchor_validation_frequency: "per_estimate"  # K_0-HARD: jeder Estimate
-    anchor_log: "audit/anchors/rfc3161-anchors.jsonl"
+    external_anchor_type: rfc3161
+    external_anchor_provider: freetsa
+    external_anchor_validation_frequency: per_estimate
+    anchor_log: audit/anchors/rfc3161-anchors.jsonl
     pre_action_domain_check: true
     pre_action_backup_check: true
     pre_action_blast_radius_check: true
   K14_human_override_decay:
-    override_complexity: "requires_specialist"   # Steuerberater-Pflicht
+    override_complexity: requires_specialist
     override_documentation_freshness_days: 14
-    martin_review_cadence: "monthly"
+    martin_review_cadence: monthly
     bus_factor_handover_drilled: false
   K15_entropy_budget:
     entropy_added_loc_estimate: 880
     entropy_added_concepts:
-      - DBA-Article-7-Business-Profits
-      - DBA-Article-10-Dividends
-      - DBA-Article-12-Royalties
-      - Sec-883-Carve-Out
-      - E2-Visa-Tax-Implications
-    entropy_justified_by_rho: "Cape-Coral-Relocation K_0-Schutz (Wegzugssteuer)"
-    entropy_subtractive_potential: "Konsolidiert Tax-DBA + Sec-883 in 1 Pipeline"
+    - DBA-Article-7-Business-Profits
+    - DBA-Article-10-Dividends
+    - DBA-Article-12-Royalties
+    - Sec-883-Carve-Out
+    - E2-Visa-Tax-Implications
+    entropy_justified_by_rho: Cape-Coral-Relocation K_0-Schutz (Wegzugssteuer)
+    entropy_subtractive_potential: Konsolidiert Tax-DBA + Sec-883 in 1 Pipeline
   K16_concurrent_spawn_mutex:
-    concurrent_spawn_protection: "both"
-    lock_dir: "/tmp/df-usa-cross-border-tax-optimizer.lock"
-    lock_implementation: atomic_lock_w48  # W50-A Batch-2: AtomicLock (file-based)
+    concurrent_spawn_protection: both
+    lock_dir: /tmp/df-usa-cross-border-tax-optimizer.lock
+    lock_implementation: atomic_lock_w48
     lock_stale_age_h: 6
     engine_pgrep_check: true
-    lock_release_on: "EXIT_INT_TERM"
-
+    lock_release_on: EXIT_INT_TERM
 lose_coupling:
   LC1_graceful_degradation:
     degradation_modes:
-      - full
-      - degraded_no_anwalt_api
-      - sandbox_mock
+    - full
+    - degraded_no_anwalt_api
+    - sandbox_mock
     degradation_test_required: true
   LC2_direct_mode:
     direct_mode_available: true
     direct_mode_capability: 0.5
-    direct_mode_trigger: "anwalt_api_unreachable_30s"
+    direct_mode_trigger: anwalt_api_unreachable_30s
   LC3_circuit_breaker:
     circuit_breaker_timeout_s: 30
     circuit_breaker_open_threshold: 2
@@ -87,27 +83,43 @@ lose_coupling:
   LC5_health_check:
     health_check_dependencies: []
     health_check_degraded_score: 0.5
-    health_check_endpoint_or_file: "state/df-usa-tax-optimizer-health.json"
-
+    health_check_endpoint_or_file: state/df-usa-tax-optimizer-health.json
 activation:
-  default_mode: "sandbox"
-  env_var_real_mode: "DF_USA_TAX_OPTIMIZER_REAL_ENABLED"
-  phronesis_ticket_env: "PHRONESIS_TICKET"
-  phronesis_required_for: "real_tax_calculation_with_anwalt_signoff"
+  default_mode: sandbox
+  env_var_real_mode: DF_USA_TAX_OPTIMIZER_REAL_ENABLED
+  phronesis_ticket_env: PHRONESIS_TICKET
+  phronesis_required_for: real_tax_calculation_with_anwalt_signoff
   pre_run_check_pflicht: true
   cost_estimate_required: true
   quota_budget_ceiling_calls_per_run: 20
-  cost_overrun_action: "hard_stop"
-
+  cost_overrun_action: hard_stop
 cross_df:
   upstream:
-    - df-usa-multi-tenant-orchestrator
+  - df-usa-multi-tenant-orchestrator
   downstream:
-    - df-florida-hotel-acquisition-tracker
-
+  - df-florida-hotel-acquisition-tracker
 shared_modules:
-  - _df_common/adapter_base
-  - _df_common/atomic_lock
-  - _df_common/k0_phronesis_gate
+- _df_common/adapter_base
+- _df_common/atomic_lock
+- _df_common/k0_phronesis_gate
+activation_gates:
+  internal_real_mode:
+    env_var: DF-USA-CROSS-BORDER-TAX-OPTIMIZER_INTERNAL_REAL_ENABLED
+    default: false
+    description: Echte Daten-Verarbeitung lokal/sandbox, KEIN External-Output
+  external_real_mode:
+    env_var: DF-USA-CROSS-BORDER-TAX-OPTIMIZER_REAL_ENABLED
+    default: false
+    description: Real-Mode mit External-Output (Phronesis-Sign-Off Pflicht)
+    requires:
+      phronesis_ticket_env: PHRONESIS_TICKET
+      signoff_id_env: OPERATOR_SIGNOFF_ID
+  external_output_gate:
+    env_var_signoff_id: OPERATOR_SIGNOFF_ID
+    default: BLOCKED
+    description: Mechanischer Block fuer External-Communication ohne Sign-Off
+output_pipe_block:
+- external_api_call_unverified
+- production_db_write_unverified
 
-[CRUX-MK]
+# [CRUX-MK]
