@@ -1,0 +1,8 @@
+{
+  "df": "df-usa-cross-border-tax-optimizer",
+  "ts": "2026-06-05T17:22:25.088340+00:00",
+  "ok": true,
+  "bytes": 3847,
+  "model": "qwen2.5:14b-instruct",
+  "duration_s": 72.4
+}
